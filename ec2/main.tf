@@ -56,7 +56,7 @@ resource "aws_security_group" "network-security-group" {
   }
   
   tags = {
-    Name = "sneha-nsg"
+    Name = "sneha-nsg1"
   }
 }
 
@@ -64,7 +64,7 @@ resource "null_resource" "ansible" {
   depends_on = [aws_instance.app_server]
   provisioner "local-exec" {
     command = <<EOT
-    ansible-playbook -i ec2-ansible/aws_ec2.yml ec2-ansible/playbook.yml -v
+    ansible-playbook -i ansible/ansible.cfg ansible/playbook.yml  -v
   EOT
   }
 }
