@@ -42,12 +42,12 @@ module "ec2" {
 #     Name = "nsg1"
 #   }
 # }
-# resource "null_resource" "ansible" {
-#   depends_on = [module.ec2]
-#   provisioner "local-exec" {
-#     command = <<EOT
-#     ansible-playbook -i ansible/aws_ec2.yml ansible/playbook.yml -v 
-#   EOT
-#   }
-# }
+resource "null_resource" "ansible" {
+  depends_on = [module.ec2]
+  provisioner "local-exec" {
+    command = <<EOT
+    ansible-playbook -i ansible/aws_ec2.yml ansible/playbook.yml -v 
+  EOT
+  }
+}
 
