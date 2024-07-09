@@ -60,11 +60,3 @@ resource "aws_security_group" "network-security-group" {
   }
 }
 
-resource "null_resource" "ansible" {
-  depends_on = [aws_instance.app_server]
-  provisioner "local-exec" {
-    command = <<EOT
-    ansible-playbook -i ansible/aws_ec2.yml ansible/playbook.yml  -v
-  EOT
-  }
-}
