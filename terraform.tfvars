@@ -1,4 +1,4 @@
-network_security_group_name = "sg-sneha"
+network_security_group_name = "sneha-sg"
 instance                    = "t2.micro"
 instance_count              = 1
 ami_id                      = "ami-08a0d1e16fc3f61ea"
