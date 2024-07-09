@@ -56,7 +56,7 @@ resource "aws_security_group" "network-security-group" {
   }
   
   tags = {
-    Name = "nsg1"
+    Name = "nsg2"
   }
 }
 
