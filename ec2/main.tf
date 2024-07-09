@@ -8,21 +8,20 @@ resource "aws_instance" "app_server" {
   subnet_id = var.subnet_id
   user_data = var.user_data
 
-    provisioner "local-exec" {
-    command = <<EOT
-      echo "[example]" > hosts
-      echo "${self.public_ip} ansible_ssh_private_key_file=/Users/snehatuladhar/Downloads/deploy-application-using-terraform-and-ansible-INTERN-747/amisneha.pem ansible_user=ec2-user" >> hosts
-      ansible-playbook -i hosts /Users/snehatuladhar/Downloads/deploy-application-using-terraform-and-ansible-INTERN-747/ansible/playbook.yml --ssh-extra-args='-o StrictHostKeyChecking=no'
-    EOT
-    //depends on
-    connection {
-      type        = "ssh"
-      user        = "ec2-user"
-      private_key = file("/Users/snehatuladhar/Downloads/deploy-application-using-terraform-and-ansible-INTERN-747/amisneha.pem")
-      host        = self.public_ip
-    }
-  }
-
+  #   provisioner "local-exec" {
+  #   command = <<EOT
+  #     echo "[example]" > hosts
+  #     echo "${self.public_ip} ansible_ssh_private_key_file=/Users/snehatuladhar/Downloads/deploy-application-using-terraform-and-ansible-INTERN-747/amisneha.pem ansible_user=ec2-user" >> hosts
+  #     ansible-playbook -i hosts /Users/snehatuladhar/Downloads/deploy-application-using-terraform-and-ansible-INTERN-747/ansible/playbook.yml --ssh-extra-args='-o StrictHostKeyChecking=no'
+  #   EOT
+  #   //depends on
+  #   connection {
+  #     type        = "ssh"
+  #     user        = "ec2-user"
+  #     private_key = file("/Users/snehatuladhar/Downloads/deploy-application-using-terraform-and-ansible-INTERN-747/amisneha.pem")
+  #     host        = self.public_ip
+  #   }
+  # }
 
   tags = {
     Name = "ProjectServerInstance ${count.index + 1}"
@@ -41,6 +40,13 @@ resource "aws_security_group" "network-security-group" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"] 
   }
+    ingress {
+    description = "Node App Port"
+    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+  }
   egress{
     description ="SSM"
     from_port   = 0
@@ -51,5 +57,14 @@ resource "aws_security_group" "network-security-group" {
   
   tags = {
     Name = "nsg-inbound"
+  }
+}
+
+resource "null_resource" "ansible" {
+  depends_on = [aws_instance.app_server]
+  provisioner "local-exec" {
+    command = <<EOT
+    ansible-playbook -i ec2-ansible/aws_ec2.yml ec2-ansible/playbook.yml -v
+  EOT
   }
 }
