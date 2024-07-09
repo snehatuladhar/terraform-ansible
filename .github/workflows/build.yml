@@ -2,7 +2,7 @@ name: github_action_to_ec2
 
 on:
   push:
-    branches: [ "INTERN-762" ]
+    branches: [ "intern-747" ]
 
 jobs:
   setup_aws_terraform:
