@@ -1,0 +1,8 @@
+---
+packages:
+  - net-tools
+  - git
+  - nodejs
+  - npm
+git_repo: "https://github.com/sandeshlama7/sample_todo.git"
+app_dir: "/home/ec2-user/sample_todo"
