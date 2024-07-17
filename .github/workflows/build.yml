@@ -3,7 +3,8 @@ name: github_action_to_ec2
 on:
   push:
     branches: [ "intern-747" ]
-
+  pull_request:
+    branches: [ "main" ]
 jobs:
   setup_aws_terraform:
     runs-on: ubuntu-latest
