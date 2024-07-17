@@ -1,0 +1,39 @@
+---
+- name: Install required packages
+  yum:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  loop: "{{ packages }}"
+
+- name: Clone Git Repo
+  git:
+    repo: "{{ git_repo }}"
+    dest: "{{ app_dir }}"
+
+- name: Install pm2 globally
+  npm:
+    name: pm2
+    global: yes
+    state: present
+
+- name: Install Node App Dependencies
+  command: npm install
+  args:
+    chdir: "{{ app_dir }}"
+
+- name: Install Mongodb Repo
+  copy:
+    src: ansible/roles/nodes/files/file.txt
+    dest: /etc/yum.repos.d/mongodb-org-7.0.repo
+
+- name: Install mongodb-org
+  dnf:
+    name: mongodb-org
+    state: present
+  notify: Start mongod
+
+- name: Run the node app
+  command: pm2 start server.js
+  args:
+    chdir: "{{ app_dir }}"
